@@ -1,0 +1,55 @@
+# set notification options
+notifications: 
+  email:
+    recipients:
+      - nhirata@mozilla.com
+    on_failure: always
+
+# language
+language: java
+
+# versions of java script supported for openhab
+jdk:
+  - oraclejdk8
+# only need one build for now
+# - oraclejdk7
+# - openjdk7
+
+# whitelist
+branches:
+  only:
+    - master
+    - travis_experiment
+before_install:
+#   - sudo apt-get update -qq
+#   - sudo apt-get install -qq [packages list]
+  - git submodule update --init --recursive
+  - cd smarthome; mvn install; cd ..
+  - cd openhab-core; mvn install; cd ..
+  - cd openhab2-addons; mvn install; cd ..
+  - cd openhab; mvn install; cd ..
+
+install:
+#  - bundle install --path vendor/bundle
+#  - npm install
+  - cd openhab-distro; mvn install
+
+# before_script:
+#  - bower install
+
+script:
+  - mvn test
+  - mvn test-integration
+
+# after_success:
+# - test $TRAVIS_PULL_REQUEST = false && git push
+
+# after_failure:
+# 
+
+# after_script:
+ 
+ 
+# before_deploy:
+# deploy:
+# after_deploy:
